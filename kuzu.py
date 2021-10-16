@@ -42,25 +42,25 @@ class NetConv(nn.Module):
     # all using relu, followed by log_softmax
     def __init__(self):
         super(NetConv, self).__init__()
-        channels1 = 8
+        channels1 = 12
         kernal1 = 5
         stride1 = 1
-        pad1 =  0 #int(kernal1 / 2)
+        pad1 =  2
         pool1 = 2
 
         width1 = int((1 + (28 + 2 * pad1 - kernal1) / stride1) / pool1)
 
-        channels2 = 16
-        kernal2 = 3
+        channels2 = 24
+        kernal2 = 5
         stride2 = 1
-        pad2 =  0 #int(kernal2 / 2)  2
-        pool2 = 2
+        pad2 =  2
+        pool2 = 1
         
         width2 = int((1 + (width1 + 2 * pad2 - kernal2) / stride2) / pool2)
         
         size = channels2 * (width2 ** 2)
 
-        full = 150
+        full = 140
 
         self.conv1 = nn.Conv2d(1, channels1, kernal1,
                                stride = stride1, padding = pad1)
