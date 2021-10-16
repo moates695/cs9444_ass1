@@ -53,7 +53,7 @@ class NetConv(nn.Module):
         channels2 = 16
         kernal2 = 3
         stride2 = 1
-        pad2 =  0 #int(kernal2 / 2)
+        pad2 =  0 #int(kernal2 / 2)  2
         pool2 = 2
         
         width2 = int((1 + (width1 + 2 * pad2 - kernal2) / stride2) / pool2)
