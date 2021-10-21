@@ -54,7 +54,8 @@ class lang_anbn:
 
     def get_sequence(self):
         seq_raw, prob, state = self.get_one_example()
-        seq = torch.from_numpy(np.asarray(seq_raw))
+        #seq = torch.from_numpy(np.asarray(seq_raw))
+        seq = torch.as_tensor(seq_raw)
         input = F.one_hot(seq[0:-1],num_classes=self.num_class).float()
         target = torch.from_numpy(np.asarray(prob)).float()
         input = input.unsqueeze(0)
