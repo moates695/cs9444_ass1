@@ -68,12 +68,17 @@ np.set_printoptions(suppress=True,precision=2)
 for weight in net.parameters():
     print(weight.data.numpy())
 
-if args.hid == 2:
-    plt.plot(net.H0.data[0],net.H0.data[1],'bx') 
-elif args.hid == 3:    
+if args.model == 'srn':
+    if args.hid == 2:
+        plt.plot(net.H0.data[0],net.H0.data[1],'bx') 
+    elif args.hid == 3:    
+        fig = plt.figure()
+        ax = Axes3D(fig)
+        ax.plot(net.H0.data[0],net.H0.data[1],net.H0.data[2],'bx') 
+else:
     fig = plt.figure()
     ax = Axes3D(fig)
-    ax.plot(net.H0.data[0],net.H0.data[1],net.H0.data[2],'bx') 
+    ax.plot(0,0,0,'bx')
     
 with torch.no_grad():
     net.eval()
@@ -84,11 +89,12 @@ with torch.no_grad():
         label = seq[1:]
 
         net.init_hidden()
-        hidden_seq, output = net(input)
+        hidden_seq, output, c_seq, f_seq, i_seq, g_seq, o_seq = net(input)
 
         hidden = hidden_seq.squeeze()
         
-        lang.print_outputs(epoch, seq, state, hidden, target, output)
+        lang.print_outputs(epoch, seq, state, hidden, target, output, 
+                           c_seq, f_seq, i_seq, g_seq, o_seq)
         sys.stdout.flush()
 
         if args.hid == 2:

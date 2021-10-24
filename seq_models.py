@@ -71,6 +71,11 @@ class LSTM_model(nn.Module):
         """Assumes x is of shape (batch, sequence, feature)"""
         batch_size, seq_size, _ = x.size()
         hidden_seq = []
+        c_seq = []
+        f_seq = []
+        i_seq = []
+        g_seq = []
+        o_seq = []
         if init_states is None:
             h_t, c_t = (torch.zeros(batch_size,self.num_hid).to(x.device), 
                         torch.zeros(batch_size,self.num_hid).to(x.device))
@@ -89,11 +94,26 @@ class LSTM_model(nn.Module):
                 torch.sigmoid(gates[:, NH*3:]),   # output gate
             )
             c_t = f_t * c_t + i_t * g_t
+            c_seq.append(c_t.unsqueeze(0))
+            f_seq.append(f_t.unsqueeze(0))
+            i_seq.append(f_t.unsqueeze(0))
+            g_seq.append(g_t.unsqueeze(0))
+            o_seq.append(o_t.unsqueeze(0))
             h_t = o_t * torch.tanh(c_t)
             hidden_seq.append(h_t.unsqueeze(0))
         hidden_seq = torch.cat(hidden_seq, dim=0)
         # reshape from (sequence, batch, feature)
         #           to (batch, sequence, feature)
         hidden_seq = hidden_seq.transpose(0,1).contiguous()
+        c_seq = torch.cat(c_seq, dim=0)
+        c_seq = c_seq.transpose(0,1).contiguous()
+        f_seq = torch.cat(f_seq, dim=0)
+        f_seq = f_seq.transpose(0,1).contiguous()
+        i_seq = torch.cat(i_seq, dim=0)
+        i_seq = i_seq.transpose(0,1).contiguous()
+        g_seq = torch.cat(g_seq, dim=0)
+        g_seq = g_seq.transpose(0,1).contiguous()
+        o_seq = torch.cat(o_seq, dim=0)
+        o_seq = o_seq.transpose(0,1).contiguous()
         output = hidden_seq @ self.V + self.out_bias
-        return hidden_seq, output
+        return hidden_seq, output, c_seq, f_seq, i_seq, g_seq, o_seq
