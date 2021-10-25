@@ -96,7 +96,7 @@ class LSTM_model(nn.Module):
             c_t = f_t * c_t + i_t * g_t
             c_seq.append(c_t.unsqueeze(0))
             f_seq.append(f_t.unsqueeze(0))
-            i_seq.append(f_t.unsqueeze(0))
+            i_seq.append(i_t.unsqueeze(0))
             g_seq.append(g_t.unsqueeze(0))
             o_seq.append(o_t.unsqueeze(0))
             h_t = o_t * torch.tanh(c_t)
